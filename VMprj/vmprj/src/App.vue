@@ -1,15 +1,33 @@
 <template>
   <div id="app">
-    <Allview></Allview>
+     <transition :name="transitionName" >
+        <router-view/>
+     </transition>
   </div>
 </template>
-
 <script>
-import Allview  from "./view/Allview"
 export default {
   name: 'App',
-  components: {
-     Allview
+  data(){
+    return{
+       transitionName:""
+    }
+  },
+  watch:{
+    //使用watch监听$router的变化
+      $route(to,from){
+          let a=to.meta.index;
+          let b=from.meta.index;
+          if(a!=b){
+              if(a>b){
+              this.transitionName="slide-left"
+              }else{
+              this.transitionName="slide-right"
+              }
+          }else{
+              this.transitionName="slide-mid"
+          }
+      }
   }
 }
 </script>
@@ -36,8 +54,41 @@ html,body{
   width:100%;
   height: 100%;
 }
+html{
+  font-size: 26.666666vw;
+}
+body{
+  font-size:16px;
+}
 #app{
   width:100%;
   height: 100%;
+}
+
+
+
+
+/* 过度属性的设置 */
+.slide-right-enter-active,
+.slide-right-leave-active{
+   will-change: transform;
+   transition: all 300ms linear;
+   position: absolute;
+}
+.slide-left-enter-active,
+.slide-left-leave-active{
+   will-change: transform;
+   transition: all 300ms linear;
+   position: absolute;
+}
+.slide-right-enter{
+   transform:translateX(-100%)
+}
+.slide-left-enter{
+  transform:translateX(100%)
+}
+.slide-mid-enter-active,
+.slide-mid-leave-active{
+   transition: all 1ms linear;
 }
 </style>
